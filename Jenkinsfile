@@ -23,7 +23,7 @@ pipeline {
                     // app = docker.build(DOCKER_IMAGE_NAME)
                     //app.inside {
                     //    sh 'echo Hello, World!'
-                     }
+                    // }
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
                    // docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
                    //     app.push("${env.BUILD_NUMBER}")
                    //     app.push("latest")
-                    }
+                   //}
                 }
             }
         }
