@@ -16,24 +16,30 @@ pipeline {
             }
         }
 
-	stage('Build and Push Docker Image') {
+	 stage('Build Docker Image') {
             steps {
                 script {
-                    // Retrieve the current build number
-                    def buildNumber = env.BUILD_NUMBER
-                    println "Current build number: ${buildNumber}"
-                    
-                    // Build the Docker image with sudo privileges
-                    sh 'sudo docker build -t ${DOCKER_IMAGE_NAME} .'
-                    
-                    // Push the Docker image to the registry with sudo privileges
-                    sh "sudo docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_IMAGE_NAME}:${buildNumber}"
-                    sh "sudo docker push ${DOCKER_IMAGE_NAME}:${buildNumber}"
-                    sh "sudo docker push ${DOCKER_IMAGE_NAME}:latest"
+		   println "Build image"
+                    // app = docker.build(DOCKER_IMAGE_NAME)
+                    //app.inside {
+                    //    sh 'echo Hello, World!'
+                     }
                 }
             }
         }
-	        
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+		 println "Push image"
+                   // docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
+                   //     app.push("${env.BUILD_NUMBER}")
+                   //     app.push("latest")
+                    }
+                }
+            }
+        }
+                
         
 	stage('CANARY DEPLOYMENT') {
             steps {
