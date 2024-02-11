@@ -23,15 +23,18 @@ pipeline {
         }
 
 	 stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }	 
+    		steps {
+        	script {
+            	// Execute docker commands with sudo
+            	sudo("docker login -u ganeshbv -p edurekavr registry-1.docker.io")
+            	sudo("docker tag ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} ganeshbv/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
+            	sudo("docker tag ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} ganeshbv/${DOCKER_IMAGE_NAME}:latest")
+            	sudo("docker push ganeshbv/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
+            	sudo("docker push ganeshbv/${DOCKER_IMAGE_NAME}:latest")
+        	}
+    	}
+	}
+	    
         
 	stage('CANARY DEPLOYMENT') {
             steps {
