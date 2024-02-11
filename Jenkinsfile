@@ -23,16 +23,21 @@ pipeline {
         }
 
 	stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
-	   
+    	   steps {
+         	script {
+            	def buildNumber = "${env.BUILD_NUMBER}"
+            	println "Current build number: ${buildNumber}"
+            
+            	def app = docker.build(DOCKER_IMAGE_NAME)
+            	docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
+                app.push(buildNumber)
+                app.push("latest")
+                 	}
+         	}
+    	   }
+	}
+
+   
         
 	stage('CANARY DEPLOYMENT') {
             steps {
