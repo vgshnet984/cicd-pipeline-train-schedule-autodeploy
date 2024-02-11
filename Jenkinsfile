@@ -22,16 +22,17 @@ pipeline {
                  }
         }
 
-        stage('Push Docker Image') {
+	stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
+            		// Push Docker image with sudo
+            		sudo sh "docker push ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+            		sudo sh "docker push ${DOCKER_IMAGE_NAME}:latest"
+        		}
+    		}
+	}		
+	    
+        
 	stage('CANARY DEPLOYMENT') {
             steps {
 		sh "chmod +x kubedeploy.sh"
