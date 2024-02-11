@@ -15,29 +15,25 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
-        stage('Build Docker Image') {
+
+	stage('Build and Push Docker Image') {
             steps {
-                // Build the Docker image with sudo
-                sh 'sudo docker build -t ${DOCKER_IMAGE_NAME} .'
-                 }
+                script {
+                    // Retrieve the current build number
+                    def buildNumber = env.BUILD_NUMBER
+                    println "Current build number: ${buildNumber}"
+                    
+                    // Build the Docker image with sudo privileges
+                    sh 'sudo docker build -t ${DOCKER_IMAGE_NAME} .'
+                    
+                    // Push the Docker image to the registry with sudo privileges
+                    sh "sudo docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_IMAGE_NAME}:${buildNumber}"
+                    sh "sudo docker push ${DOCKER_IMAGE_NAME}:${buildNumber}"
+                    sh "sudo docker push ${DOCKER_IMAGE_NAME}:latest"
+                }
+            }
         }
-
-	stage('Push Docker Image') {
-    	   steps {
-         	script {
-            	def buildNumber = "${env.BUILD_NUMBER}"
-            	println "Current build number: ${buildNumber}"
-            
-            	def app = docker.build(DOCKER_IMAGE_NAME)
-            	docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
-                app.push(buildNumber)
-                app.push("latest")
-                 	}
-         	}
-    	   }
-	}
-
-   
+	        
         
 	stage('CANARY DEPLOYMENT') {
             steps {
