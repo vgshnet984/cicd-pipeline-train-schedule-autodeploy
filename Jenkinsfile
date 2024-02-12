@@ -19,11 +19,11 @@ pipeline {
 	 stage('Build Docker Image') {
             steps {
                 script {
-		   println "Build image"
-                    // app = docker.build(DOCKER_IMAGE_NAME)
-                    //app.inside {
-                    //    sh 'echo Hello, World!'
-                    // }
+		   
+                    app = docker.build(DOCKER_IMAGE_NAME)
+                    app.inside {
+                    sh 'echo Hello, World!'
+                     }
                 }
             }
         }
@@ -32,10 +32,10 @@ pipeline {
             steps {
                 script {
 		 	println "Push image"
-                   // docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
-                   //     app.push("${env.BUILD_NUMBER}")
-                   //     app.push("latest")
-                   //}
+                        docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
                 }
             }
         }
@@ -43,17 +43,15 @@ pipeline {
         
 	stage('CANARY DEPLOYMENT') {
             steps {
-		  println "Canary development"
-		//sh "chmod +x kubedeploy.sh"
-                //sh "./kubedeploy.sh"
+		  sh "chmod +x kubedeploy.sh"
+                  sh "./kubedeploy.sh"
             }
         }
 
 	stage('Train-Schedule PROD DEPLOYMENT') {
             steps {
-		 println "Prod deployment"
-		//sh "chmod +x kubedeploy-Prod.sh"
-                //sh "./kubedeploy-Prod.sh"
+		sh "chmod +x kubedeploy-Prod.sh"
+                sh "./kubedeploy-Prod.sh"
             }
         }
     }
