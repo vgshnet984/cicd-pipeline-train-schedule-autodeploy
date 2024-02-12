@@ -31,7 +31,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-		 println "Push image"
+		 	println "Push image"
                    // docker.withRegistry('https://registry-1.docker.io', 'docker_hub_login') {
                    //     app.push("${env.BUILD_NUMBER}")
                    //     app.push("latest")
@@ -43,7 +43,7 @@ pipeline {
         
 	stage('CANARY DEPLOYMENT') {
             steps {
-		
+		  println "Canary development"
 		//sh "chmod +x kubedeploy.sh"
                 //sh "./kubedeploy.sh"
             }
@@ -51,6 +51,7 @@ pipeline {
 
 	stage('Train-Schedule PROD DEPLOYMENT') {
             steps {
+		 printlin "Prod deployment"
 		//sh "chmod +x kubedeploy-Prod.sh"
                 //sh "./kubedeploy-Prod.sh"
             }
