@@ -51,7 +51,7 @@ pipeline {
 
 	stage('Train-Schedule PROD DEPLOYMENT') {
             steps {
-		 printlin "Prod deployment"
+		 println "Prod deployment"
 		//sh "chmod +x kubedeploy-Prod.sh"
                 //sh "./kubedeploy-Prod.sh"
             }
